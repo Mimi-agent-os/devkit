@@ -1,0 +1,49 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: devkit
+      # devkit links protocol, sdk and gateway as link:../<name>; its tests run the built gateway CLI
+      - uses: actions/checkout@v4
+        with:
+          repository: Mimi-agent-os/protocol
+          path: protocol
+      - uses: actions/checkout@v4
+        with:
+          repository: Mimi-agent-os/sdk
+          path: sdk
+      - uses: actions/checkout@v4
+        with:
+          repository: Mimi-agent-os/gateway
+          path: gateway
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Build protocol
+        working-directory: protocol
+        run: pnpm install --frozen-lockfile && pnpm build
+      - name: Build sdk
+        working-directory: sdk
+        run: pnpm install --frozen-lockfile && pnpm build
+      - name: Build gateway
+        working-directory: gateway
+        run: pnpm install --frozen-lockfile && pnpm build
+      - name: Install
+        working-directory: devkit
+        run: pnpm install --frozen-lockfile
+      - name: Verify
+        working-directory: devkit
+        run: pnpm check && pnpm test && pnpm build

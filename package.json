@@ -1,0 +1,39 @@
+{
+    "name": "@mimi-os/devkit",
+    "version": "0.1.0",
+    "private": true,
+    "description": "mimi-dev: test an agent in the terminal against a real mimi gateway",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Mimi-agent-os/devkit.git"
+    },
+    "homepage": "https://github.com/Mimi-agent-os/devkit",
+    "bugs": "https://github.com/Mimi-agent-os/devkit/issues",
+    "type": "module",
+    "license": "Apache-2.0",
+    "engines": {
+        "node": ">=24"
+    },
+    "bin": {
+        "mimi-dev": "./dist/cli.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "pnpm run clean && tsc -p tsconfig.build.json",
+        "check": "tsc",
+        "test": "node --test \"test/**/*.test.ts\"",
+        "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\""
+    },
+    "dependencies": {
+        "@mimi-os/protocol": "link:../protocol",
+        "@mimi-os/sdk": "link:../sdk",
+        "mimi-gateway": "link:../gateway"
+    },
+    "devDependencies": {
+        "@types/node": "^25.6.2",
+        "typescript": "6.0.3"
+    },
+    "packageManager": "pnpm@10.34.5"
+}
